@@ -33,8 +33,14 @@ def getToken(code):
     response = requests.request("POST", url,data=payload, headers=headers)
     access_token = json.loads(((response.text).encode('utf-8')))['access_token']
     getFriendList(access_token)
+def getLogin(access_token):
 
-
+    url = "https://kapi.kakao.com/v2/user/me"
+    header = {
+        'Authorization': 'Bearer ' + str(access_token)
+    }
+    response = requests.get(url, headers=header).text
+    print(response)
 def getExtraAuth():
     print("extra")
     url = 'https://kauth.kakao.com/oauth/authorize?client_id=a930f0b4697f2c084e1e8d0fc473049a&redirect_uri=http://127.0.0.1:5000/oauth/friend&response_type=code&scope=talk_message,friends'
@@ -42,19 +48,42 @@ def getExtraAuth():
     isAuth = True
 
 def getFriendList(access_token):
-    print('access :  ' + access_token)
-    url = "https://kapi.kakao.com/v1/api/talk/friends?limit=100"
+    url = "https://kapi.kakao.com/v1/api/talk/friends"
     header ={
         'Authorization' : 'Bearer ' + str(access_token)
     }
-    response = requests.get(url,headers=header).text
-    print(response)
-    friendList = response.get("elements")
-    print(friendList)
+    friend = {}
+    response = json.loads(requests.get(url,headers=header).text)['elements']
     #friendId = []
-    #for i in friendList:
+    #for i in response:
+    #    friend['']
     #    print(i['profile_nickname'])
-    render_template('index.html')
+    uuid = response[0]['uuid']
+    print("uuid" + uuid)
+    makeMessage(uuid, access_token)
 
+    #render_template('index.html')
+def makeMessage(uuid,access_token):
+    headers = {
+        'Authorization': "Bearer " + str(access_token),
+    }
+    url = "https://kapi.kakao.com/v1/api/talk/friends/message/default/send"  ##친구에게 메시지 보내기
+    uuid = '["'+ uuid+'"]'
+    print(uuid)
+    uuidsData = {'receiver_uuids': uuid}
+
+    post = {
+        "object_type": "text",
+        "text": "test입니다",
+        "link": {
+            "web_url": "https://developers.kakao.com",
+        },
+    }
+
+    data = {'template_object': json.dumps(post)}
+    uuidsData.update(data)
+    print(type(uuidsData))
+    response = requests.post(url, headers=headers, data=uuidsData)
+    print(response)
 if __name__ == '__main__':
     app.run()
