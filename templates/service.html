@@ -9,7 +9,7 @@
     <meta name="author" content="">
 
     <title>메시지 서비스</title>
-
+    <script src="/static/jquery/jquery-3.5.1.js"></script>
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="/static/business/vendor/bootstrap/css/bootstrap.css">
 
@@ -150,13 +150,19 @@
         }
 
         $.ajax({
-            url: Flask.url_for('makeMessage'),
+            url: "{{url_for("getFriendList")}}",
+            contentType: "application/json",
+            dataType: "json",
             type: 'POST',
             data: JSON.stringify(movies),   // converts js value to JSON string
-        })
-            .done(function (result) {     // on success get the return object from server
-                console.log(result)     // do whatever with it. In this case see it in console
-            })
+            success: function (response){
+                console.log("success");
+            },
+            error: function (err){
+                console.log(err);
+            }
+        });
+
     }
 
 </script>
