@@ -71,7 +71,7 @@
     <div class="row">
         <div class="col-lg-12 my-2">
             <div class="mt-2 mb-3">
-                <button class="btn btn-outline-dark btn-block" onclick="toggleElementVisibility('response_format_div')">
+                <button class="btn btn-outline-dark btn-block">
                     <h4 class="text-left">친구 목록</h4>
                     <textarea class="form-control" id="frined_name_input" rows="10"></textarea>
                 </button>
@@ -90,12 +90,19 @@
 
                         <div class="form-group">
                             <h4 class="text-left">메시지</h4>
+                            <h6 class="text-left">사진첨부</h6>
+                            <img src="" id="yourImageTag">
+                            <input type="file" accept="image/png,image/jpeg" name="file" id="fileInput"/>
                             <textarea class="form-control" id="message_input" rows="10"></textarea>
                             <button class="btn btn-primary btn-block" type="button" onclick="sendMessage()">
                                 메세지 보내기
                             </button>
                         </div>
                     </form>
+                    <button class="btn btn-outline-dark btn-block">
+                        <h4 class="text-left">전송 실패 친구 목록</h4>
+                        <textarea class="form-control" id="fail_frined_name_input" rows="10" readonly="readonly"></textarea>
+                    </button>
                 </div>
             </div>
         </div>
@@ -112,16 +119,29 @@
 <script type="text/javascript">
 
     var uuidList = new Array();
-    var message_textarea = document.getElementById('message_input')
-    var friend_text_area = document.getElementById('frined_name_input')
+    var message_textarea = document.getElementById('message_input');
+    var friend_text_area = document.getElementById('frined_name_input');
+    var fail_friend_text_area = document.getElementById('fail_frined_name_input')
+
 
     function sendMessage() {
         var message = message_textarea.value;
         var friendName = friend_text_area.value;
-        var data = {
-            'message' : message,
-            'friendName' : friendName
+        var filePath;
+
+        try {
+            filePath = document.getElementById('fileInput').files[0].name;
+        } catch (e) {
+            filePath = ""
         }
+
+
+        var data = {
+            'message': message,
+            'friendName': friendName,
+            'filePath': filePath
+        }
+
 
         $.ajax({
             url: "{{url_for("getFriendList")}}",
@@ -129,16 +149,21 @@
             dataType: "json",
             type: 'POST',
             data: JSON.stringify(data),   // converts js value to JSON string
-            success: function (response){
-                console.log("success");
+            success: function (response) {
+                failFriends = response.redir;
+                var failName = "";
+                for (var i = 0; i < failFriends.length; i++) {
+                    failName += failFriends[i] + " "
+                }
+                fail_friend_text_area.value = failName
             },
-            error: function (err){
+            error: function (err) {
                 console.log(err);
             }
         });
 
-    }
 
+    }
 
 
 </script>
