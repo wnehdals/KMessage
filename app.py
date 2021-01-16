@@ -16,9 +16,8 @@ fail_name = [] #보내기 실패한 이름들
 @app.route('/')
 @app.route('/index.html')
 def index():
-    title='제발쫌되라'
     #return redirect(url_for('getComplete'))
-    return render_template('index.html',htmltitle = title)
+    return render_template('index.html')
 
 @app.route('/complete.html')
 def getComplete():
@@ -40,6 +39,7 @@ def getFriendList():
 
         for i in friendName:
             step1 = open_chatroom(i)
+            print(step1)
             if(step1 == True):
                 if(filePath == ""):
                     kakao_send_init(i,message)
@@ -126,7 +126,9 @@ def open_chatroom(chatroom_name):
     time.sleep(1)
 
     try:
+
         imagePath = img_path + 'arrow.png'
+        print(imagePath)
         location = pyautogui.locateCenterOnScreen(imagePath, confidence=conf)
         x, y = location
         return True
@@ -146,6 +148,7 @@ def kakao_send_init(chatroom_name, text, img=None):
     hwndEdit = win32gui.FindWindowEx( hwndMain, None, "RichEdit20W", None)
     # hwndListControl = win32gui.FindWindowEx( hwndMain, None, "EVA_VH_ListControl_Dblclk", None)
     kakao_sendtext(text)
+    print("kakao sent init " + img)
     if(img != None):
         kakao_sendimg(img)
 
@@ -162,6 +165,8 @@ def kakao_sendtext(text):
 
 # 채팅방에 사진입력
 def kakao_sendimg(img_file_name):
+    print('sendimg')
+    print("imgpath : " + img_path + 'light_gray_clip1.png')
     click_img(img_path + 'light_gray_clip1.png')
     pyperclip.copy(img_file_name)
     pyautogui.hotkey("ctrl", "v")
