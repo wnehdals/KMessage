@@ -73,30 +73,11 @@
             <div class="mt-2 mb-3">
                 <button class="btn btn-outline-dark btn-block" onclick="toggleElementVisibility('response_format_div')">
                     <h4 class="text-left">친구 목록</h4>
+                    <textarea class="form-control" id="frined_name_input" rows="10"></textarea>
                 </button>
 
                 <div id="response_format_div" class="pt-2 pb-2">
-                    <table class="table">
-                        <thead class="thead-light">
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">이름</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for person in friend_html %}
-                        <tr>
-                            <th scope="row">{{loop.index}}</th>
-                            <td>{{person.profile_nickname}}</td>
-                            <td>
-                                <label class="checkbox-inline">
-                                    <input type="checkbox" name="agree" value="option1">
-                                </label>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
+
                 </div>
             </div>
 
@@ -108,6 +89,7 @@
 
 
                         <div class="form-group">
+                            <h4 class="text-left">메시지</h4>
                             <textarea class="form-control" id="message_input" rows="10"></textarea>
                             <button class="btn btn-primary btn-block" type="button" onclick="sendMessage()">
                                 메세지 보내기
@@ -128,25 +110,17 @@
     <!-- /.container -->
 </footer>
 <script type="text/javascript">
-    var chkbox = document.getElementsByName('agree');
-    var friends = {{friend_html | tojson}};
+
     var uuidList = new Array();
-    var textarea = document.getElementById('message_input')
+    var message_textarea = document.getElementById('message_input')
+    var friend_text_area = document.getElementById('frined_name_input')
 
     function sendMessage() {
-        for (var i = 0; i < chkbox.length; i++) {
-            if (chkbox[i].checked) {
-
-                uuidList[i] = friends[i].uuid
-                console.log(uuidList[i])
-            } else {
-                chk = false;
-            }
-        }
-        var message = textarea.value
-        var movies = {
-            'message': message,
-            'uuids': uuidList
+        var message = message_textarea.value;
+        var friendName = friend_text_area.value;
+        var data = {
+            'message' : message,
+            'friendName' : friendName
         }
 
         $.ajax({
@@ -154,7 +128,7 @@
             contentType: "application/json",
             dataType: "json",
             type: 'POST',
-            data: JSON.stringify(movies),   // converts js value to JSON string
+            data: JSON.stringify(data),   // converts js value to JSON string
             success: function (response){
                 console.log("success");
             },
@@ -164,6 +138,8 @@
         });
 
     }
+
+
 
 </script>
 </body>
