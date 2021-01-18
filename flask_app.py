@@ -171,4 +171,5 @@ def kakao_sendimg(img_file_name):
 
 
 if __name__ == '__main__':
+    os.environ['DISPLAY'] = ':0'
     app.run()
