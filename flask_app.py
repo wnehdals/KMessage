@@ -31,7 +31,6 @@ def getFriendList():
 
         data = request.get_json()
         flag = False
-        print(data)
         friendName = data['friendName'].split(' ')
         message = data['message']
         filePath = data['filePath']
@@ -39,7 +38,6 @@ def getFriendList():
 
         for i in friendName:
             step1 = open_chatroom(i)
-            print(step1)
             if(step1 == True):
                 if(filePath == ""):
                     kakao_send_init(i,message)
@@ -125,12 +123,12 @@ def open_chatroom(chatroom_name):
     #pyautogui.typewrite('\n', interval=0.1)
     time.sleep(1)
 
-    try:
 
+    try:
         imagePath = img_path + 'arrow.png'
-        print(imagePath)
-        location = pyautogui.locateCenterOnScreen(imagePath, confidence=conf)
-        x, y = location
+        isOpenChatRoom = location = pyautogui.locateCenterOnScreen(img_path + 'light_gray_clip1.png', confidence=conf)
+        if(isOpenChatRoom == None):
+            return False
         return True
     except TypeError:
         fail_name.append(chatroom_name)
@@ -148,7 +146,6 @@ def kakao_send_init(chatroom_name, text, img=None):
     hwndEdit = win32gui.FindWindowEx( hwndMain, None, "RichEdit20W", None)
     # hwndListControl = win32gui.FindWindowEx( hwndMain, None, "EVA_VH_ListControl_Dblclk", None)
     kakao_sendtext(text)
-    print("kakao sent init " + img)
     if(img != None):
         kakao_sendimg(img)
 
@@ -165,8 +162,6 @@ def kakao_sendtext(text):
 
 # 채팅방에 사진입력
 def kakao_sendimg(img_file_name):
-    print('sendimg')
-    print("imgpath : " + img_path + 'light_gray_clip1.png')
     click_img(img_path + 'light_gray_clip1.png')
     pyperclip.copy(img_file_name)
     pyautogui.hotkey("ctrl", "v")
