@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>메시지 서비스</title>
+    <script src="/static/jquery/jquery-3.5.1.js"></script>
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="/static/business/vendor/bootstrap/css/bootstrap.css">
+
+    <!-- Custom styles for this template -->
+    <link href="static/business/css/modern-business.css" rel="stylesheet">
+    <style>
+        .text-stroke {
+            color: white;
+            text-shadow: -1px -1px 0 #000,
+            1px -1px 0 #000,
+            -1px 1px 0 #000,
+            1px 1px 0 #000;
+        }
+
+        tr:hover {
+            background-color: rgba(18, 145, 255, 0.2);
+        }
+
+
+    </style>
+</head>
+
+<body>
+<!-- Navigation -->
+<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="index.html">Home</a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+                data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/index.html">Main Page</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+<!-- Page Content -->
+<div class="container">
+
+    <!-- Page Heading/Breadcrumbs -->
+    <h1 class="mt-4 mb-3">메시지 서비스</h1>
+    <hr>
+    <div class="mt-3 mb-4">
+        <p>...</p>
+    </div>
+    <hr class="mt-4">
+    <div class="mt-3 mb-2">
+
+    </div>
+
+
+    <div class="row">
+        <div class="col-lg-12 my-2">
+            <div class="mt-2 mb-3">
+                <button class="btn btn-outline-dark btn-block">
+                    <h4 class="text-left">친구 목록</h4>
+                    <textarea class="form-control" id="frined_name_input" rows="10"></textarea>
+                </button>
+
+                <div id="response_format_div" class="pt-2 pb-2">
+
+                </div>
+            </div>
+
+
+            <div class="mt-2 mb-3">
+
+                <div id="api_test_div" class="form-group pt-2 pb-2">
+                    <form role="form">
+
+
+                        <div class="form-group">
+                            <h4 class="text-left">메시지</h4>
+                            <h6 class="text-left">사진첨부</h6>
+                            <img src="" id="yourImageTag">
+                            <input type="file" accept="image/png,image/jpeg" name="file" id="fileInput"/>
+                            <textarea class="form-control" id="message_input" rows="10"></textarea>
+                            <button class="btn btn-primary btn-block" type="button" onclick="sendMessage()">
+                                메세지 보내기
+                            </button>
+                        </div>
+                    </form>
+                    <button class="btn btn-outline-dark btn-block">
+                        <h4 class="text-left">전송 실패 친구 목록</h4>
+                        <textarea class="form-control" id="fail_frined_name_input" rows="10" readonly="readonly"></textarea>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="py-5 bg-dark">
+    <div class="container">
+        <p class="m-0 text-center text-white">Copyright &copy; Your Website 2020</p>
+    </div>
+    <!-- /.container -->
+</footer>
+<script type="text/javascript">
+
+    var uuidList = new Array();
+    var message_textarea = document.getElementById('message_input');
+    var friend_text_area = document.getElementById('frined_name_input');
+    var fail_friend_text_area = document.getElementById('fail_frined_name_input')
+
+
+    function sendMessage() {
+        var message = message_textarea.value;
+        var friendName = friend_text_area.value;
+        var filePath;
+
+        try {
+            filePath = document.getElementById('fileInput').files[0].name;
+        } catch (e) {
+            filePath = ""
+        }
+
+
+        var data = {
+            'message': message,
+            'friendName': friendName,
+            'filePath': filePath
+        }
+
+
+        $.ajax({
+            url: "{{url_for("getFriendList")}}",
+            contentType: "application/json",
+            dataType: "json",
+            type: 'POST',
+            data: JSON.stringify(data),   // converts js value to JSON string
+            success: function (response) {
+                failFriends = response.redir;
+                var failName = "";
+                for (var i = 0; i < failFriends.length; i++) {
+                    failName += failFriends[i] + " "
+                }
+                fail_friend_text_area.value = failName
+                alert("작업을 완료하였습니다.")
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+
+
+    }
+
+
+</script>
+</body>
+</html>

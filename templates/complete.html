@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>메시지 서비스</title>
+    <script src="/static/jquery/jquery-3.5.1.js"></script>
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="/static/business/vendor/bootstrap/css/bootstrap.css">
+
+    <!-- Custom styles for this template -->
+    <link href="static/business/css/modern-business.css" rel="stylesheet">
+    <style>
+        .text-stroke {
+            color: white;
+            text-shadow: -1px -1px 0 #000,
+            1px -1px 0 #000,
+            -1px 1px 0 #000,
+            1px 1px 0 #000;
+        }
+
+        tr:hover {
+            background-color: rgba(18, 145, 255, 0.2);
+        }
+
+
+    </style>
+</head>
+
+<body>
+<!-- Navigation -->
+<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="index.html">Home</a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+                data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/index.html">Main Page</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+<!-- Page Content -->
+<div class="container">
+
+    <!-- Page Heading/Breadcrumbs -->
+    <h1 class="mt-4 mb-3">메시지 서비스</h1>
+    <hr>
+    <div class="mt-3 mb-4">
+        <p>...</p>
+    </div>
+    <hr class="mt-4">
+    <div class="mt-3 mb-2">
+
+    </div>
+
+
+    <div class="row">
+        <div class="col-lg-12 my-2">
+
+
+            <div class="mt-2 mb-3">
+
+                <div id="api_test_div" class="form-group pt-2 pb-2">
+
+                    <button class="btn btn-outline-dark btn-block">
+                    <h4 class="text-left">전송 실패 친구 목록</h4>
+                    <textarea class="form-control" id="fail_frined_name_input" rows="10"></textarea>
+                </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="py-5 bg-dark">
+    <div class="container">
+        <p class="m-0 text-center text-white">Copyright &copy; Your Website 2020</p>
+    </div>
+    <!-- /.container -->
+</footer>
+<script type="text/javascript">
+    if(window.location == "http://127.0.0.1:5000/complete.html"){
+        window.location.href="http://127.0.0.1:5000/complete.html";
+    }
+
+    var fail_friend_text_area = document.getElementById('fail_frined_name_input')
+    var failFriends = {{fail_name_html | tojson}};
+    var failName;
+    for(var i=0;i<failFriends.length;i++){
+        failName += failFriends[i] + " "
+    }
+    fail_friend_text_area.value = failName
+
+
+</script>
+</body>
+</html>
