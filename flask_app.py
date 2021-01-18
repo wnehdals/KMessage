@@ -2,13 +2,13 @@ import json
 import requests
 from flask import Flask, request,jsonify,render_template, redirect, url_for
 import sys
-import pyautogui
-import time
-import pyperclip
+#import pyautogui
+#import time
+#import pyperclip
 import os
-import win32con
-import win32api
-import win32gui
+#import win32con
+#import win32api
+#import win32gui
 
 app = Flask(__name__)
 img_file_name = "{filename}.png"
@@ -137,7 +137,7 @@ def open_chatroom(chatroom_name):
 # config
 img_path = os.path.dirname(os.path.realpath(__file__)) + '/img/'
 conf = 0.90
-pyautogui.PAUSE = 0.5
+#pyautogui.PAUSE = 0.5
 
 # # 채팅방 전송 준비
 def kakao_send_init(chatroom_name, text, img=None):
@@ -171,5 +171,6 @@ def kakao_sendimg(img_file_name):
 
 
 if __name__ == '__main__':
-    os.environ['DISPLAY'] = ':0'
-    app.run()
+    if 'liveconsole' not in gethostname():
+        app.run(debug=True)
+
